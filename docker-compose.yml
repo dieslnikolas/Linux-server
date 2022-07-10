@@ -1,8 +1,6 @@
 # Which version of docker-compose for Linux Server instalation with
 # - Nginx proxy
 # - Let's encrypt
-# - SQL Server
-# - And backups with email notification
 version: "3"
 
 # Containers
@@ -19,9 +17,9 @@ services:
       # This allows the proxy to react to Docker events on the host server and automatically modify the Nginx reverse proxy configuration. 
       - /var/run/docker.sock:/tmp/docker.sock:ro
       # SSL Suport for certbot generator
-      - /etc/nginx/certs:/etc/nginx/certs
-      - /etc/nginx/vhost.d:/etc/nginx/vhost.d
-      - /usr/share/nginx/html:/usr/share/nginx/html
+      - /docker/nginx/certs:/etc/nginx/certs
+      - /docker/nginx/vhost.d:/etc/nginx/vhost.d
+      - /docker/nginx/html:/usr/share/nginx/html
 
   # Certbot let's encrypt support for nginx-proxy
   letsencrypt-proxy:
@@ -31,34 +29,13 @@ services:
       # This allows the proxy to react to Docker events on the host server and automatically modify the Nginx reverse proxy configuration. 
       - /var/run/docker.sock:/var/run/docker.sock:ro
       # SSL Suport for certbot generator
-      - /etc/nginx/certs:/etc/nginx/certs
-      - /etc/nginx/vhost.d:/etc/nginx/vhost.d
-      - /usr/share/nginx/html:/usr/share/nginx/html
+      - /docker/nginx/certs:/etc/nginx/certs
+      - /docker/nginx/vhost.d:/etc/nginx/vhost.d
+      - /docker/nginx/html:/usr/share/nginx/html
     environment:
       - DEFAULT_EMAIL=dieslnikolas@gmail.com
       - NGINX_PROXY_CONTAINER=nginx-proxy
  
-  # SQL Server
-  sql_db:
-    image: mcr.microsoft.com/mssql/server:2022-latest #SQL Server 2022
-    container_name: sql_db
-    # Linux user who to instal as
-    user: root 
-    volumes:
-      # This way it will not delete databases
-      - /var/opt/mssql:/var/opt/mssql
-    environment:
-      SA_PASSWORD: "" # SA Password
-      ACCEPT_EULA: 'y' # auto accept EULA
-      MSSQL_PID: "Developer" # SQL Edition
-    healthcheck:
-        test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$$SA_PASSWORD" -Q "SELECT 1" || exit 1
-        interval: 10s
-        timeout: 3s
-        retries: 10
-    ports:
-      - 1433:1433
-
 networks:
   default:
     external:

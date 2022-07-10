@@ -1,0 +1,35 @@
+# Which version of docker-compose for Linux Server instalation with
+# Database instalation
+version: "3"
+
+# Containers
+services:
+
+  # SQL Server
+  sql_db:
+    image: mcr.microsoft.com/mssql/server:2022-latest #SQL Server 2022
+    container_name: sql_db
+    # Linux user who to instal as
+    user: root 
+    volumes:
+      # This way it will not delete databases
+      - /var/opt/mssql:/var/opt/mssql
+      - /backups:/backups
+    environment:
+      SA_PASSWORD: "12345" # SA Password
+      ACCEPT_EULA: 'y' # auto accept EULA
+      MSSQL_PID: "Developer" # SQL Edition
+      VIRTUAL_HOST: db.foo.bar.com
+      LETSENCRYPT_HOST: db.foo.bar.com
+    healthcheck:
+        test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$$SA_PASSWORD" -Q "SELECT 1" || exit 1
+        interval: 10s
+        timeout: 3s
+        retries: 10
+    ports:
+      - 1433:1433
+
+networks:
+  default:
+    external:
+      name: nginx-proxy

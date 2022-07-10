@@ -1,0 +1,29 @@
+# Which version of docker-compose for Linux Server instalation with
+# Database instalation
+version: "3"
+
+# Containers
+services:
+
+  duplicati:
+    image: ghcr.io/linuxserver/duplicati:2.0.6
+    container_name: duplicati
+    environment:
+      - PUID=1000 #User ID
+      - PGID=1000 #Group ID
+      - TZ=Europe/Prague
+      - CLI_ARGS= #optional
+      - VIRTUAL_HOST=backup.myweb.com
+      - LETSENCRYPT_HOST=backup.myweb.com
+    volumes:
+      - /docker/backup:/config
+      - /docker/backup/backups:/backups
+      - /docker/backup/source:/source
+    ports:
+      - 8200:8200
+    restart: unless-stopped
+
+networks:
+  default:
+    external:
+      name: nginx-proxy

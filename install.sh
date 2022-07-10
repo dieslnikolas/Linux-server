@@ -1,6 +1,6 @@
 # Uncomplicated firewall
 if [ -x "$(command -v ufw)" ]; then
-  echo " Uncomplicated Firewall is already installed"
+  echo "Uncomplicated Firewall is already installed"
 else
     echo "Installing Uncomplicated Firewall"
     echo "TIP: You need to correctly set up firewall rules at your server provider before you can use the ufw."
@@ -15,7 +15,10 @@ else
     echo "Setting up Uncomplicated Firewall for SSH"
     ufw allow ssh
     echo "Setting up Uncomplicated Firewall for SQL Remote Access"
-    ufw allow 1433
+    ufw allow 1433/tcp
+    echo "Setting up Uncomplicated Firewall for Web Access"
+    ufw allow 80/tcp
+    ufw allow 443/tcp
 
     echo "Enabling Uncomplicated Firewall"
     ufw enable

@@ -1,0 +1,9 @@
+﻿[Unit]
+Description=SQL 2022 DB Container Backup Script
+Wants=sqldb-backup.timer
+[Service]
+Type=simple
+ExecStart=sh /docker/sqldb/backup.sh
+User=xcad
+[Install]
+WantedBy=default.target

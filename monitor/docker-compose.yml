@@ -1,0 +1,22 @@
+# # THIS IS A BIG TODO 
+
+# # Which version of docker-compose for Linux Server instalation with
+# # Database instalation
+# version: "3"
+
+# services:
+
+#   # Server Monitoring
+#   monitor:
+#     image: lscr.io/linuxserver/healthchecks:latest
+#     container_name: monitor
+#     environment:
+#       VIRTUAL_HOST: db.myweb.com
+#       LETSENCRYPT_HOST: db.myweb.com
+#     ports:
+#       - 1433:1433
+
+# networks:
+#   default:
+#     external:
+#       name: nginx-proxy

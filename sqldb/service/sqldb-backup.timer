@@ -1,0 +1,8 @@
+﻿[Unit]
+Description=SQL 2022 DB Container Backup Daily Job
+[Timer]
+OnCalendar=daily
+Persistent=true
+Unit=sqldb-backup.service
+[Install]
+WantedBy=timers.target
